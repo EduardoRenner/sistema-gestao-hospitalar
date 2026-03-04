@@ -35,20 +35,35 @@ Tratamento de exceção personalizada (CoberturaInvalidaException)
 ## Estrutura do Projeto
 
 src/
+
  ├── model/
+ 
  │    ├── Paciente
+ 
  │    ├── PacienteParticular
+ 
  │    ├── PacienteConvenio
+ 
  │    ├── Atendimento
+ 
  │    └── Convenio (enum)
+ 
  │
+ 
  ├── service/
+ 
  │    └── HospitalService
+ 
  │
+ 
  ├── exception/
+ 
  │    └── CoberturaInvalidaException
+ 
  │
+ 
  └── Main
+ 
 ## Conceitos Aplicados
 
 O sistema utiliza polimorfismo para permitir que cada tipo de paciente implemente sua própria regra de cálculo:
