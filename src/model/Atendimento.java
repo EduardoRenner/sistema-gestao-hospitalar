@@ -1,7 +1,6 @@
 package model;
 
 public class Atendimento {
-    private String data;
     private String descricao;
     private double valorBase;
 
@@ -14,8 +13,9 @@ public class Atendimento {
         return valorBase;
     }
 
-    public String getData() {
-        return data;
+    public void imprimirAtendimento(){
+        System.out.println(this.descricao);
+        System.out.println(this.valorBase);
     }
 
     public String getDescricao() {

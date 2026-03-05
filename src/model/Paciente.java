@@ -22,25 +22,19 @@ public abstract class Paciente {
         this.atendimentos.add(atendimento);
     }
 
-    public void listAtendimentos() {
-        int numConsulta = 1;
-        for (Atendimento atendimento : atendimentos) {
-            System.out.println("Paciente: " + this.nome);
-            System.out.println("Cpf: " + this.cpf);
-            System.out.println("Consulta n: " + numConsulta);
-            System.out.println("Valor da consulta: R$" + calcularValorFinal());
-            System.out.println("Data: " + atendimento.getData());
-            System.out.println("Descrição: \n" + atendimento.getDescricao());
-            numConsulta++;
+    public void imprimirAtendimentos(){
+        if (this.getAtendimentos().isEmpty()){
+            System.out.println("Nenhum atendimento cadastrado.");
+        }else {
+            int i = 1;
+            System.out.println("Paciente: "+this.nome);
+            for (Atendimento atendimento : atendimentos) {
+            System.out.println("Atendimento "+i+":");
+                atendimento.imprimirAtendimento();
+                i++;
+            }
+            System.out.println("\nO paciente "+this.nome+" possui "+atendimentos.size()+" atendimento(s) no total");
         }
-    }
-
-    public void calcularTotalGeral() {
-        double total = 0;
-        for (Atendimento atendimento : atendimentos) {
-            total += calcularValorFinal();
-        }
-
     }
 
     public String getNome() {

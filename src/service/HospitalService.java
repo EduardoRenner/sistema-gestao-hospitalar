@@ -3,21 +3,23 @@ package service;
 import exception.CoberturaInvalidaException;
 import model.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class HospitalService {
     Scanner sc = new Scanner(System.in);
     private List<Paciente> pacientes = new ArrayList<>();
-    private int opcao;
 
     public void menu() {
-
+    int opcao;
         do {
+            System.out.println();
             System.out.println("1 - Cadastrar paciente particular;");
             System.out.println("2 - Cadastrar paciente convênio;");
             System.out.println("3 - Listar pacientes;");
             System.out.println("4 - Processar paciente;");
             System.out.println("5 - Adicionar atendimento a paciente;");
+            System.out.println("6 - Quantos antendimentos o paciente possui;");
             System.out.println("0 - Sair.");
 
             opcao = sc.nextInt();
@@ -38,6 +40,12 @@ public class HospitalService {
                     break;
                 case 5:
                     adicionarAtendimentoPaciente();
+                    break;
+                case 6:
+                    listarAtendimentos();
+                    break;
+                case 0:
+                    System.out.println("Processo finalizado.");
                     break;
                 default:
                     System.out.println("Número do índice inválido");
@@ -87,11 +95,7 @@ public class HospitalService {
             System.out.println(i + 1 + " - " + Convenio.values()[i].name());
         }
         try {
-
             opcaoConvenio = sc.nextInt() - 1;
-
-
-
             sc.nextLine();
             if (opcaoConvenio < 0 || opcaoConvenio >= Convenio.values().length) {
                 System.out.println("Opção inválida");
@@ -120,7 +124,7 @@ public class HospitalService {
         }
         int indice = sc.nextInt() - 1;
         sc.nextLine();
-        if (indice < 0 || indice > pacientes.size()) {
+        if (indice < 0 || indice >= pacientes.size()) {
             System.out.println("Opção inválida");
             return;
         }
@@ -138,6 +142,8 @@ public class HospitalService {
             } else if (paciente instanceof PacienteConvenio) {
                 System.out.println("Tipo: Paciente Convênio");
             }
+
+            paciente.imprimirAtendimentos();
 
             double valorFinal = paciente.calcularValorFinal();
 
@@ -187,15 +193,25 @@ public class HospitalService {
         System.out.println("Atendimento adicionado com sucesso!");
     }
 
+    public void listarAtendimentos(){
+        if (pacientes.isEmpty()) {
+            System.out.println("Nenhum paciente cadastrado");
+            return;
+        }
+        for (int i = 0; i < pacientes.size(); i++) {
+            System.out.println((i + 1) + " - " + pacientes.get(i).getNome());
+        }
+        int indice = sc.nextInt() - 1;
+        sc.nextLine();
+        if (indice < 0 || indice > pacientes.size()) {
+            System.out.println("Opção inválida");
+            return;
+        }
+        Paciente pacienteSelecionado = pacientes.get(indice);
+        pacienteSelecionado.imprimirAtendimentos();
+    }
+
     public List<Paciente> getPacientes() {
         return pacientes;
-    }
-
-    public int getOpcao() {
-        return opcao;
-    }
-
-    public void setOpcao(int opcao) {
-        this.opcao = opcao;
     }
 }
