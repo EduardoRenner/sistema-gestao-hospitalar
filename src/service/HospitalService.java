@@ -36,13 +36,13 @@ public class HospitalService {
                     listarPacientes();
                     break;
                 case 4:
-                    processarPacienteMenu();
+                    selecionarPacienteMenu();
                     break;
                 case 5:
                     adicionarAtendimentoPaciente();
                     break;
                 case 6:
-                    listarAtendimentos();
+                    selecionarPacientesParaListarAtendimentos();
                     break;
                 case 0:
                     System.out.println("Processo finalizado.");
@@ -114,7 +114,7 @@ public class HospitalService {
         }
     }
 
-    public void processarPacienteMenu(){
+    public void selecionarPacienteMenu(){
         if (pacientes.isEmpty()) {
             System.out.println("Nenhum paciente cadastrado");
             return;
@@ -143,7 +143,7 @@ public class HospitalService {
                 System.out.println("Tipo: Paciente Convênio");
             }
 
-            paciente.imprimirAtendimentos();
+            paciente.listarAtendimentosPaciente();
 
             double valorFinal = paciente.calcularValorFinal();
 
@@ -193,7 +193,7 @@ public class HospitalService {
         System.out.println("Atendimento adicionado com sucesso!");
     }
 
-    public void listarAtendimentos(){
+    public void selecionarPacientesParaListarAtendimentos(){
         if (pacientes.isEmpty()) {
             System.out.println("Nenhum paciente cadastrado");
             return;
@@ -208,7 +208,7 @@ public class HospitalService {
             return;
         }
         Paciente pacienteSelecionado = pacientes.get(indice);
-        pacienteSelecionado.imprimirAtendimentos();
+        pacienteSelecionado.listarAtendimentosPaciente();
     }
 
     public List<Paciente> getPacientes() {

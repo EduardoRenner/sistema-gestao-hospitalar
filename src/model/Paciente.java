@@ -22,7 +22,7 @@ public abstract class Paciente {
         this.atendimentos.add(atendimento);
     }
 
-    public void imprimirAtendimentos(){
+    public void listarAtendimentosPaciente(){
         if (this.getAtendimentos().isEmpty()){
             System.out.println("Nenhum atendimento cadastrado.");
         }else {
@@ -35,6 +35,12 @@ public abstract class Paciente {
             }
             System.out.println("\nO paciente "+this.nome+" possui "+atendimentos.size()+" atendimento(s) no total");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Nome: "+nome +
+                ", CPF: "+cpf;
     }
 
     public String getNome() {

@@ -18,6 +18,12 @@ public class Atendimento {
         System.out.println(this.valorBase);
     }
 
+    @Override
+    public String toString() {
+        return "Descrição: "+ descricao +
+                ", valor base: R$"+ valorBase;
+    }
+
     public String getDescricao() {
         return descricao;
     }

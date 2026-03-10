@@ -18,6 +18,12 @@ public class PacienteParticular extends Paciente {
     }
 
     @Override
+    public String toString() {
+        return super.toString()+
+        ", tipo: particular";
+    }
+
+    @Override
     public void imprimirPaciente() {
         System.out.println("Nome do paciente: "+getNome());
         System.out.println("Inscrito no cpf: "+getCpf());

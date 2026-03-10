@@ -32,6 +32,12 @@ public class PacienteConvenio extends Paciente {
         System.out.println("Convênio: "+getConvenio());
     }
 
+    @Override
+    public String toString() {
+        return super.toString()+
+        ", tipo: "+ getConvenio();
+    }
+
     public Convenio getConvenio() {
         return convenio;
     }

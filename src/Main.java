@@ -1,12 +1,9 @@
-import model.Convenio;
-import model.Paciente;
-import model.PacienteConvenio;
-import model.PacienteParticular;
+
 import service.HospitalService;
 
-public class Main {
+public class Main{
     static void main(String[] args) {
-        HospitalService hospitalService = new HospitalService();
-        hospitalService.menu();
+        HospitalService servicoHospitalar = new HospitalService();
+        servicoHospitalar.menu();
     }
 }

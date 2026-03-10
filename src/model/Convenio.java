@@ -13,7 +13,15 @@ public enum Convenio {
         this.percentualCobertura = percentualCobertura;
     }
 
+
+
     public double getPercentualCobertura() {
         return percentualCobertura;
+    }
+
+    @Override
+    public String toString() {
+        return "Convênio: "+ name()+
+                ", percentual de cobertura: "+percentualCobertura;
     }
 }
