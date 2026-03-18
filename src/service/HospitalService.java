@@ -1,5 +1,6 @@
 package service;
 
+import dao.PacienteDAO;
 import exception.CoberturaInvalidaException;
 import model.*;
 
@@ -20,6 +21,8 @@ public class HospitalService {
             System.out.println("4 - Processar paciente;");
             System.out.println("5 - Adicionar atendimento a paciente;");
             System.out.println("6 - Quantos antendimentos o paciente possui;");
+            System.out.println("7 - Atualizar nome do paciente;");
+            System.out.println("8 - Deletar paciente;");
             System.out.println("0 - Sair.");
 
             opcao = sc.nextInt();
@@ -43,6 +46,12 @@ public class HospitalService {
                     break;
                 case 6:
                     selecionarPacientesParaListarAtendimentos();
+                    break;
+                case 7:
+                    atualizarPaciente();
+                    break;
+                case 8:
+                    deletarPaciente();
                     break;
                 case 0:
                     System.out.println("Processo finalizado.");
@@ -70,6 +79,8 @@ public class HospitalService {
             System.out.println("Esperado: número; \nInserido: texto.");
         }
         PacienteParticular pacienteParticular = new PacienteParticular(nome, cpf);
+        PacienteDAO dao = new PacienteDAO();
+        dao.inserirPaciente(pacienteParticular);
         pacientes.add(pacienteParticular);
         System.out.println("Paciente cadastrado(a)!");
     }
@@ -104,6 +115,8 @@ public class HospitalService {
             }
             Convenio convenio = Convenio.values()[opcaoConvenio];
             PacienteConvenio pacienteConvenio = new PacienteConvenio(nome, cpf, convenio);
+            PacienteDAO dao = new PacienteDAO();
+            dao.inserirPaciente(pacienteConvenio);
             pacientes.add(pacienteConvenio);
             System.out.println("Paciente cadastrado(a)!");
         }catch (InputMismatchException e) {
@@ -157,15 +170,9 @@ public class HospitalService {
 
     }
 
-    public void listarPacientes() {
-        if (pacientes.isEmpty()){
-            System.out.println("Não há pacientes cadastrados");
-            return;
-        }
-        for (Paciente paciente : pacientes) {
-            paciente.imprimirPaciente();
-        }
-
+    public void listarPacientes(){
+        PacienteDAO dao = new PacienteDAO();
+        dao.listarPacientes();
     }
 
     public void adicionarAtendimentoPaciente(){
@@ -211,7 +218,28 @@ public class HospitalService {
         pacienteSelecionado.listarAtendimentosPaciente();
     }
 
+    public void deletarPaciente(){
+        PacienteDAO dao = new PacienteDAO();
+
+        System.out.println("Insira o CPF completo do paciente que deseja deletar do banco: ");
+        String cpf = sc.nextLine();
+
+        dao.deletePaciente(cpf);
+    }
+
+    public void atualizarPaciente(){
+        PacienteDAO dao = new PacienteDAO();
+
+        System.out.println("Digite o CPF do paciente: ");
+        String cpf = sc.nextLine();
+        System.out.println("Digite o novo nome do paciente");
+        String novoNome = sc.nextLine();
+
+        dao.atualizarPaciente(cpf, novoNome);
+    }
+
     public List<Paciente> getPacientes() {
         return pacientes;
     }
+
 }
