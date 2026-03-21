@@ -1,5 +1,7 @@
 package model;
 
+import dao.AtendimentoDAO;
+
 public class PacienteParticular extends Paciente {
     public PacienteParticular(String nome, String cpf) {
         super(nome, cpf);
@@ -9,9 +11,9 @@ public class PacienteParticular extends Paciente {
     public double calcularValorFinal() {
         double total = 0;
 
-        for (Atendimento atendimento : atendimentos) {
-            total += atendimento.getValorBase();
-        }
+        AtendimentoDAO dao = new AtendimentoDAO();
+        total = dao.valorTotal(this.getId());
+
         double taxaAdministrativa = total * 0.10;
 
         return total + taxaAdministrativa;
@@ -19,14 +21,14 @@ public class PacienteParticular extends Paciente {
 
     @Override
     public String toString() {
-        return super.toString()+
-        ", tipo: particular";
+        return super.toString() +
+                ", tipo: particular";
     }
 
     @Override
     public void imprimirPaciente() {
-        System.out.println("Nome do paciente: "+getNome());
-        System.out.println("Inscrito no cpf: "+getCpf());
+        System.out.println("Nome do paciente: " + getNome());
+        System.out.println("Inscrito no cpf: " + getCpf());
         System.out.println("Cadastro particular.");
     }
 }

@@ -5,12 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b4d90c4e-f98a-4518-8731-a17758fb65e3" name="Changes" comment="adiciona métodos toString nas entidades para melhorar visualização de dados">
-      <change afterPath="$PROJECT_DIR$/lib/sqlite-jdbc-3.51.2.0.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dao/PacienteDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/database/DatabaseConnection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/database/DatabaseInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dao/AtendimentoDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hospital.db" beforeDir="false" afterPath="$PROJECT_DIR$/hospital.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/gestaoHospitalar/dao/PacienteDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/gestaoHospitalar/dao/PacienteDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/gestaoHospitalar/database/DatabaseInitializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/gestaoHospitalar/database/DatabaseInitializer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/gestaoHospitalar/model/Atendimento.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/gestaoHospitalar/model/Atendimento.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/gestaoHospitalar/model/Paciente.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/gestaoHospitalar/model/Paciente.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/gestaoHospitalar/service/HospitalService.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/gestaoHospitalar/service/HospitalService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dao/PacienteDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dao/PacienteDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/DatabaseInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/DatabaseInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Atendimento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Atendimento.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Paciente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Paciente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/PacienteConvenio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/PacienteConvenio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/PacienteParticular.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/PacienteParticular.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/HospitalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/HospitalService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,22 +66,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "onboarding.tips.debug.path": "C:/Users/Usuario/IdeaProjects/gestaoHospitalar/src/Main.java",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Gradle Declarative Configuration"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/Usuario/IdeaProjects/gestaoHospitalar/src/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Gradle Declarative Configuration&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Usuario\IdeaProjects\gestaoHospitalar\lib" />

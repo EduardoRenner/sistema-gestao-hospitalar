@@ -1,18 +1,24 @@
 package service;
 
+import dao.AtendimentoDAO;
 import dao.PacienteDAO;
+import database.DatabaseConnection;
 import exception.CoberturaInvalidaException;
 import model.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class HospitalService {
     Scanner sc = new Scanner(System.in);
-    private List<Paciente> pacientes = new ArrayList<>();
 
     public void menu() {
-    int opcao;
+        int opcao;
         do {
             System.out.println();
             System.out.println("1 - Cadastrar paciente particular;");
@@ -75,88 +81,86 @@ public class HospitalService {
         try {
             System.out.println("Insira o cpf do paciente: ");
             cpf = sc.nextLine();
+
+            cpf = cpf.replaceAll("[^0-9]", "");
+
         } catch (InputMismatchException e) {
             System.out.println("Esperado: número; \nInserido: texto.");
         }
         PacienteParticular pacienteParticular = new PacienteParticular(nome, cpf);
         PacienteDAO dao = new PacienteDAO();
-        dao.inserirPaciente(pacienteParticular);
-        pacientes.add(pacienteParticular);
+        int id = dao.inserirPaciente(pacienteParticular);
+        pacienteParticular.setId(id);
+
         System.out.println("Paciente cadastrado(a)!");
     }
 
     public void criarPacienteConvenio() {
-        String nome = null;
+        String nome;
         String cpf = null;
         int opcaoConvenio = 0;
-        try {
-            System.out.println("Digite o nome do paciente: ");
-            nome = sc.nextLine();
-        } catch (InputMismatchException e) {
-            System.out.println("Esperado: texto; \nInserido: número.");
+        System.out.println("Digite o nome do paciente: ");
+        nome = sc.nextLine();
+
+        if (nome.trim().isEmpty()) {
+            System.out.println("Não é possível cadastrar sem nome.");
+            return;
         }
-        try {
-            System.out.println("Insira o cpf do paciente: ");
-            cpf = sc.nextLine();
-        } catch (InputMismatchException e) {
-            System.out.println("Esperado: número; \nInserido: texto.");
+
+        System.out.println("Digite o CPF completo do paciente:");
+        cpf = sc.nextLine();
+
+        cpf = cpf.replaceAll("[^0-9]", "");
+
+        if (cpf.trim().isEmpty()) {
+            System.out.println("Não é possível cadastrar sem CPF.");
+            return;
         }
+
         System.out.println("Insira o convênio do paciente: ");
         for (int i = 0; i < Convenio.values().length; i++) {
             System.out.println(i + 1 + " - " + Convenio.values()[i].name());
         }
-        try {
-            opcaoConvenio = sc.nextInt() - 1;
-            sc.nextLine();
-            if (opcaoConvenio < 0 || opcaoConvenio >= Convenio.values().length) {
-                System.out.println("Opção inválida");
-                menu();
-                return;
-            }
-            Convenio convenio = Convenio.values()[opcaoConvenio];
-            PacienteConvenio pacienteConvenio = new PacienteConvenio(nome, cpf, convenio);
-            PacienteDAO dao = new PacienteDAO();
-            dao.inserirPaciente(pacienteConvenio);
-            pacientes.add(pacienteConvenio);
-            System.out.println("Paciente cadastrado(a)!");
-        }catch (InputMismatchException e) {
-            System.out.println("Esperado: número; \nInserido: texto.");
-        } catch (Exception e) {
-            System.out.println("Entrada inválida");
-            sc.nextLine();
+
+        opcaoConvenio = sc.nextInt() - 1;
+        sc.nextLine();
+        if (opcaoConvenio < 0 || opcaoConvenio >= Convenio.values().length) {
+            System.out.println("Opção inválida");
+            menu();
+            return;
         }
+        Convenio convenio = Convenio.values()[opcaoConvenio];
+        PacienteConvenio pacienteConvenio = new PacienteConvenio(nome, cpf, convenio);
+        PacienteDAO dao = new PacienteDAO();
+        int id = dao.inserirPaciente(pacienteConvenio);
+        pacienteConvenio.setId(id);
+
+        System.out.println("Paciente cadastrado(a)!");
     }
 
-    public void selecionarPacienteMenu(){
-        if (pacientes.isEmpty()) {
-            System.out.println("Nenhum paciente cadastrado");
+    public void selecionarPacienteMenu() {
+        Paciente paciente = selecionar();
+
+        if (paciente == null) {
+            System.out.println("Paciente inválido.");
             return;
         }
-        for (int i = 0; i < pacientes.size(); i++) {
-            System.out.println((i + 1) + " - " + pacientes.get(i).getNome());
-        }
-        int indice = sc.nextInt() - 1;
-        sc.nextLine();
-        if (indice < 0 || indice >= pacientes.size()) {
-            System.out.println("Opção inválida");
-            return;
-        }
-        Paciente pacienteSelecionado = pacientes.get(indice);
-        processarPaciente(pacienteSelecionado);
+
+        processarPaciente(paciente);
     }
 
     public void processarPaciente(Paciente paciente) {
         try {
-
+            System.out.println("ID: " + paciente.getId());
             System.out.println("Paciente: " + paciente.getNome());
             System.out.println("Cpf: " + paciente.getCpf());
             if (paciente instanceof PacienteParticular) {
                 System.out.println("Tipo: Paciente Particular");
             } else if (paciente instanceof PacienteConvenio) {
-                System.out.println("Tipo: Paciente Convênio");
+                System.out.println("Tipo: Paciente " + ((PacienteConvenio) paciente).getConvenio());
             }
-
-            paciente.listarAtendimentosPaciente();
+            AtendimentoDAO dao = new AtendimentoDAO();
+            dao.listarAtendimentosPaciente(paciente.getId());
 
             double valorFinal = paciente.calcularValorFinal();
 
@@ -167,58 +171,111 @@ public class HospitalService {
         } catch (Exception e) {
             System.out.println("Erro inesperado: " + e.getMessage());
         }
-
     }
 
-    public void listarPacientes(){
+    public void listarPacientes() {
         PacienteDAO dao = new PacienteDAO();
         dao.listarPacientes();
     }
 
-    public void adicionarAtendimentoPaciente(){
-        if (pacientes.isEmpty()){
-            System.out.println("Não há pacientes para adicionar atendimentos");
+    public void adicionarAtendimentoPaciente() {
+        Paciente paciente = selecionar();
+
+
+        if (paciente == null) {
+            System.out.println("Paciente inválido.");
             return;
         }
-        for (int i = 0; i < pacientes.size(); i++) {
-            System.out.println((i+1)+" - "+pacientes.get(i).getNome());
-        }
-        int indice = sc.nextInt() - 1;
-        sc.nextLine();
-        if (indice < 0 || indice >= pacientes.size()){
-            System.out.println("Opção inválida");
-            return;
-        }
-        Paciente pacienteSelecionado = pacientes.get(indice);
-        System.out.println("Adicione uma descrição ao atendimento: ");
+
+        System.out.println("Insira a descrição do atendimento: ");
         String descricao = sc.nextLine();
-        System.out.println("Adicione o valor do atendimento: ");
-        double valor = sc.nextDouble();
+
+        System.out.println("Insira o valor do atendimento(R$) :");
+        double valorBase = sc.nextDouble();
         sc.nextLine();
-        Atendimento atendimento = new Atendimento(descricao, valor);
-        pacienteSelecionado.adicionarAtendimento(atendimento);
-        System.out.println("Atendimento adicionado com sucesso!");
+
+        LocalDate data = LocalDate.now();
+        Atendimento atendimento = new Atendimento(descricao, valorBase, data, paciente.getId());
+
+
+        AtendimentoDAO dao = new AtendimentoDAO();
+        dao.inserirAtendimento(atendimento);
     }
 
-    public void selecionarPacientesParaListarAtendimentos(){
-        if (pacientes.isEmpty()) {
-            System.out.println("Nenhum paciente cadastrado");
+    public void selecionarPacientesParaListarAtendimentos() {
+        Paciente paciente = selecionar();
+
+        if (paciente == null) {
+            System.out.println("Paciente inválido.");
             return;
         }
-        for (int i = 0; i < pacientes.size(); i++) {
-            System.out.println((i + 1) + " - " + pacientes.get(i).getNome());
-        }
-        int indice = sc.nextInt() - 1;
-        sc.nextLine();
-        if (indice < 0 || indice > pacientes.size()) {
-            System.out.println("Opção inválida");
-            return;
-        }
-        Paciente pacienteSelecionado = pacientes.get(indice);
-        pacienteSelecionado.listarAtendimentosPaciente();
+
+        AtendimentoDAO dao = new AtendimentoDAO();
+        dao.listarAtendimentosPaciente(paciente.getId());
+
     }
 
-    public void deletarPaciente(){
+    public Paciente selecionar() {
+        int id;
+        String nome = null;
+        String cpf = null;
+        String convenio = null;
+
+        boolean founded = false;
+
+        String sql = "SELECT * FROM paciente";
+
+        try (Connection conn = DatabaseConnection.connect()) {
+            PreparedStatement pstmt1 = conn.prepareStatement(sql);
+            ResultSet resultSet1 = pstmt1.executeQuery();
+
+            while (resultSet1.next()) {
+                founded = true;
+
+                id = resultSet1.getInt("id");
+                nome = resultSet1.getString("nome");
+                cpf = resultSet1.getString("cpf");
+                convenio = resultSet1.getString("convenio");
+                System.out.println("ID: " + id + " | Nome: " + nome + " | CPF: " + cpf + " | Convênio: " + convenio);
+            }
+
+            if (!founded) {
+                System.out.println("Nenhum paciente encontrado.");
+                return null;
+            }
+
+            String selecionar = "SELECT * FROM paciente WHERE id = ?";
+            PreparedStatement pstmt2 = conn.prepareStatement(selecionar);
+
+            System.out.println("Digite o ID do paciente desejado: ");
+            int selecionado = sc.nextInt();
+            sc.nextLine();
+
+            pstmt2.setInt(1, selecionado);
+            ResultSet resultSet2 = pstmt2.executeQuery();
+
+            if (resultSet2.next()) {
+                id = resultSet2.getInt("id");
+                nome = resultSet2.getString("nome");
+                cpf = resultSet2.getString("cpf");
+                convenio = resultSet2.getString("convenio");
+                if (convenio.equals("PARTICULAR")) {
+                    PacienteParticular pacienteParticular = new PacienteParticular(nome, cpf);
+                    pacienteParticular.setId(id);
+                    return pacienteParticular;
+                } else {
+                    PacienteConvenio pacienteConvenio = new PacienteConvenio(nome, cpf, Convenio.valueOf(convenio));
+                    pacienteConvenio.setId(id);
+                    return pacienteConvenio;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public void deletarPaciente() {
         PacienteDAO dao = new PacienteDAO();
 
         System.out.println("Insira o CPF completo do paciente que deseja deletar do banco: ");
@@ -227,7 +284,7 @@ public class HospitalService {
         dao.deletePaciente(cpf);
     }
 
-    public void atualizarPaciente(){
+    public void atualizarPaciente() {
         PacienteDAO dao = new PacienteDAO();
 
         System.out.println("Digite o CPF do paciente: ");
@@ -237,9 +294,4 @@ public class HospitalService {
 
         dao.atualizarPaciente(cpf, novoNome);
     }
-
-    public List<Paciente> getPacientes() {
-        return pacientes;
-    }
-
 }

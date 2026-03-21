@@ -1,5 +1,6 @@
 package model;
 
+import dao.AtendimentoDAO;
 import exception.CoberturaInvalidaException;
 
 public class PacienteConvenio extends Paciente {
@@ -18,24 +19,23 @@ public class PacienteConvenio extends Paciente {
         }
         double total = 0;
 
-        for (Atendimento atendimento : atendimentos) {
-            total += atendimento.calcularValorFinal ();
-        }
+        AtendimentoDAO dao = new AtendimentoDAO();
+        total =dao.valorTotal(this.getId());
 
         return total * (1 - cobertura);
     }
 
     @Override
     public void imprimirPaciente() {
-        System.out.println("Nome do paciente: "+getNome());
-        System.out.println("Inscrito no cpf: "+getCpf());
-        System.out.println("Convênio: "+getConvenio());
+        System.out.println("Nome do paciente: " + getNome());
+        System.out.println("Inscrito no cpf: " + getCpf());
+        System.out.println("Convênio: " + getConvenio());
     }
 
     @Override
     public String toString() {
-        return super.toString()+
-        ", tipo: "+ getConvenio();
+        return super.toString() +
+                ", tipo: " + getConvenio();
     }
 
     public Convenio getConvenio() {
