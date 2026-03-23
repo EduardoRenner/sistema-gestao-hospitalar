@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class HospitalService {
     Scanner sc = new Scanner(System.in);
@@ -139,7 +138,7 @@ public class HospitalService {
     }
 
     public void selecionarPacienteMenu() {
-        Paciente paciente = selecionar();
+        Paciente paciente = selecionarPaciente();
 
         if (paciente == null) {
             System.out.println("Paciente inválido.");
@@ -162,9 +161,34 @@ public class HospitalService {
             AtendimentoDAO dao = new AtendimentoDAO();
             dao.listarAtendimentosPaciente(paciente.getId());
 
-            double valorFinal = paciente.calcularValorFinal();
+            System.out.println("Escolha a forma de processamento: ");
 
-            System.out.println("Valor total a ser pago: R$" + valorFinal);
+            int opcao;
+
+            System.out.println("1 - Processar todos os atendimentos;");
+            System.out.println("2 - Processar atendimento individual;");
+            System.out.println("0 - Retornar ao menu.");
+            opcao = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcao){
+                case 1:
+                    System.out.println("Valor total a ser pago: R$" + paciente.calcularValorFinal());
+                    menu();
+                    break;
+                case 2:
+                    dao.selecionarAtendimento();
+                    System.out.println("Valor total a ser pago: R$" + paciente.calcularValorUnico());
+                    break;
+                case 0:
+                    menu();
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+                    menu();
+                    break;
+            }
+
 
         } catch (CoberturaInvalidaException e) {
             System.out.println("Erro ao processar paciente: " + e.getMessage());
@@ -179,7 +203,7 @@ public class HospitalService {
     }
 
     public void adicionarAtendimentoPaciente() {
-        Paciente paciente = selecionar();
+        Paciente paciente = selecionarPaciente();
 
 
         if (paciente == null) {
@@ -203,7 +227,7 @@ public class HospitalService {
     }
 
     public void selecionarPacientesParaListarAtendimentos() {
-        Paciente paciente = selecionar();
+        Paciente paciente = selecionarPaciente();
 
         if (paciente == null) {
             System.out.println("Paciente inválido.");
@@ -215,7 +239,7 @@ public class HospitalService {
 
     }
 
-    public Paciente selecionar() {
+    public Paciente selecionarPaciente() {
         int id;
         String nome = null;
         String cpf = null;

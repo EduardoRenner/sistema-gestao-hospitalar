@@ -20,6 +20,18 @@ public class PacienteParticular extends Paciente {
     }
 
     @Override
+    public double calcularValorUnico() {
+        double total = 0;
+
+        AtendimentoDAO dao = new AtendimentoDAO();
+        total = dao.valorUnico(this.getId());
+
+        double taxaAdministrativa = total * 0.10;
+
+        return total + taxaAdministrativa;
+    }
+
+    @Override
     public String toString() {
         return super.toString() +
                 ", tipo: particular";

@@ -2,18 +2,22 @@ package dao;
 
 import database.DatabaseConnection;
 import model.Atendimento;
-import model.Paciente;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.Scanner;
 
 public class AtendimentoDAO {
     public void inserirAtendimento(Atendimento atendimento) {
         String sql = "INSERT INTO atendimento(descricao, valorBase, data, paciente_id) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.connect()) {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+
             pstmt.setString(1, atendimento.getDescricao());
             pstmt.setDouble(2, atendimento.getValorBase());
             pstmt.setString(3, atendimento.getData());
@@ -129,12 +133,89 @@ public class AtendimentoDAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, idPaciente);
             ResultSet resultSet = pstmt.executeQuery();
+
             while (resultSet.next()) {
                 total += resultSet.getDouble("valorBase");
             }
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return total;
+    }
+
+    public double valorUnico(int idPaciente) {
+        double total = 0;
+        String sql = "SELECT valorBase FROM atendimento WHERE paciente_id = ?";
+
+        try (Connection conn = DatabaseConnection.connect()) {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, idPaciente);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            total += resultSet.getDouble("valorBase");
+
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return total;
+    }
+
+    public Atendimento selecionarAtendimento(){
+        Scanner sc = new Scanner(System.in);
+
+        int id;
+        String descricao;
+        double valorBase;
+        String dataString;
+        int pacienteId;
+
+        boolean founded = false;
+
+        String sql = "SELECT * FROM atendimento";
+
+        try(Connection conn = DatabaseConnection.connect()) {
+            PreparedStatement pstmt1 = conn.prepareStatement(sql);
+            ResultSet resultSet1 = pstmt1.executeQuery();
+
+            while (resultSet1.next()){
+                founded = true;
+                id = resultSet1.getInt("id");
+                descricao = resultSet1.getString("descricao");
+                valorBase = resultSet1.getDouble("valorBase");
+                System.out.println("ID: "+id+" | Descrição: "+descricao+" | Valor base: R$"+valorBase);
+            }
+
+            if (!founded){
+                System.out.println("Atendimento não encontrado.");
+            }
+
+            String selecionar = "SELECT * FROM atendimento WHERE id = ?";
+            PreparedStatement pstmt2 = conn.prepareStatement(selecionar);
+
+            System.out.println("Digite o ID do atendimento desejado: ");
+            int selecionado = sc.nextInt();
+
+            pstmt2.setInt(1, selecionado);
+            ResultSet resultSet2 = pstmt2.executeQuery();
+
+            if (resultSet2.next()){
+                id = resultSet2.getInt("id");
+                descricao = resultSet2.getString("descricao");
+                valorBase = resultSet2.getDouble("valorBase");
+                dataString = resultSet2.getString("data");
+                pacienteId = resultSet2.getInt("paciente_id");
+
+                Atendimento atendimento = new Atendimento(descricao, valorBase, LocalDate.parse(dataString), pacienteId);
+                return atendimento;
+            }
+
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+
+        sc.close();
+        return null;
     }
 }

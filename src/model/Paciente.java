@@ -17,6 +17,8 @@ public abstract class Paciente {
 
     public abstract double calcularValorFinal();
 
+    public abstract double calcularValorUnico();
+
     public abstract void imprimirPaciente();
 
     @Override

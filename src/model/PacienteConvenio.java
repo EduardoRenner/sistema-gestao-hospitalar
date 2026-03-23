@@ -26,6 +26,20 @@ public class PacienteConvenio extends Paciente {
     }
 
     @Override
+    public double calcularValorUnico() {
+        double cobertura = convenio.getPercentualCobertura();
+        if (cobertura < 0.5) {
+            throw new CoberturaInvalidaException("Cobertura abaixo do mínimo permitido");
+        }
+        double total = 0;
+
+        AtendimentoDAO dao = new AtendimentoDAO();
+        total =dao.valorUnico(this.getId());
+
+        return total * (1 - cobertura);
+    }
+
+    @Override
     public void imprimirPaciente() {
         System.out.println("Nome do paciente: " + getNome());
         System.out.println("Inscrito no cpf: " + getCpf());
