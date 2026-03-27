@@ -20,11 +20,11 @@ public class PacienteParticular extends Paciente {
     }
 
     @Override
-    public double calcularValorUnico() {
+    public double calcularValorUnico(int id) {
         double total = 0;
 
         AtendimentoDAO dao = new AtendimentoDAO();
-        total = dao.valorUnico(this.getId());
+        total = dao.valorUnico(id);
 
         double taxaAdministrativa = total * 0.10;
 

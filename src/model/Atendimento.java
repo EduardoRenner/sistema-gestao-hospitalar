@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 
 public class Atendimento {
+    int id;
     private String descricao;
     private double valorBase;
     private LocalDate data;
@@ -31,6 +32,9 @@ public class Atendimento {
                 ", valor base: R$" + valorBase;
     }
 
+    public int getId() {
+        return id;
+    }
 
     public String getDescricao() {
         return descricao;
@@ -46,5 +50,9 @@ public class Atendimento {
 
     public int getPacienteId() {
         return pacienteId;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

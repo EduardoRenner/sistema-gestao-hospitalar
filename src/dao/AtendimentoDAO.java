@@ -11,12 +11,13 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public class AtendimentoDAO {
-    public void inserirAtendimento(Atendimento atendimento) {
+    public int inserirAtendimento(Atendimento atendimento) {
+        int id = 0;
+
         String sql = "INSERT INTO atendimento(descricao, valorBase, data, paciente_id) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.connect()) {
 
             PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-
 
             pstmt.setString(1, atendimento.getDescricao());
             pstmt.setDouble(2, atendimento.getValorBase());
@@ -24,10 +25,16 @@ public class AtendimentoDAO {
             pstmt.setInt(4, atendimento.getPacienteId());
             pstmt.executeUpdate();
 
+            ResultSet resultSet = pstmt.getGeneratedKeys();
+            if (resultSet.next()) {
+                id = resultSet.getInt(1);
+            }
+
             System.out.println("Atendimento adicionado ao banco.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return id;
     }
 
     public void listarAtendimentos() {
@@ -144,16 +151,18 @@ public class AtendimentoDAO {
         return total;
     }
 
-    public double valorUnico(int idPaciente) {
+    public double valorUnico(int id) {
         double total = 0;
-        String sql = "SELECT valorBase FROM atendimento WHERE paciente_id = ?";
+        String sql = "SELECT valorBase FROM atendimento WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.connect()) {
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, idPaciente);
+            pstmt.setInt(1, id);
             ResultSet resultSet = pstmt.executeQuery();
 
+            if (resultSet.next()){
             total += resultSet.getDouble("valorBase");
+            }
 
 
         } catch (SQLException e) {
@@ -208,6 +217,7 @@ public class AtendimentoDAO {
                 pacienteId = resultSet2.getInt("paciente_id");
 
                 Atendimento atendimento = new Atendimento(descricao, valorBase, LocalDate.parse(dataString), pacienteId);
+                atendimento.setId(id);
                 return atendimento;
             }
 

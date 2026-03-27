@@ -26,7 +26,7 @@ public class PacienteConvenio extends Paciente {
     }
 
     @Override
-    public double calcularValorUnico() {
+    public double calcularValorUnico(int id) {
         double cobertura = convenio.getPercentualCobertura();
         if (cobertura < 0.5) {
             throw new CoberturaInvalidaException("Cobertura abaixo do mínimo permitido");
@@ -34,7 +34,7 @@ public class PacienteConvenio extends Paciente {
         double total = 0;
 
         AtendimentoDAO dao = new AtendimentoDAO();
-        total =dao.valorUnico(this.getId());
+        total = dao.valorUnico(id);
 
         return total * (1 - cobertura);
     }

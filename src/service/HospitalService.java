@@ -24,10 +24,9 @@ public class HospitalService {
             System.out.println("2 - Cadastrar paciente convênio;");
             System.out.println("3 - Listar pacientes;");
             System.out.println("4 - Processar paciente;");
-            System.out.println("5 - Adicionar atendimento a paciente;");
-            System.out.println("6 - Quantos antendimentos o paciente possui;");
-            System.out.println("7 - Atualizar nome do paciente;");
-            System.out.println("8 - Deletar paciente;");
+            System.out.println("5 - Menu de atendimentos;");
+            System.out.println("6 - Atualizar nome do paciente;");
+            System.out.println("7 - Deletar paciente;");
             System.out.println("0 - Sair.");
 
             opcao = sc.nextInt();
@@ -47,15 +46,12 @@ public class HospitalService {
                     selecionarPacienteMenu();
                     break;
                 case 5:
-                    adicionarAtendimentoPaciente();
+                    menuAtendimentos();
                     break;
                 case 6:
-                    selecionarPacientesParaListarAtendimentos();
-                    break;
-                case 7:
                     atualizarPaciente();
                     break;
-                case 8:
+                case 7:
                     deletarPaciente();
                     break;
                 case 0:
@@ -177,8 +173,8 @@ public class HospitalService {
                     menu();
                     break;
                 case 2:
-                    dao.selecionarAtendimento();
-                    System.out.println("Valor total a ser pago: R$" + paciente.calcularValorUnico());
+                    Atendimento atendimento = dao.selecionarAtendimento();
+                    System.out.println("Valor total a ser pago: R$" + paciente.calcularValorUnico(atendimento.getId()));
                     break;
                 case 0:
                     menu();
@@ -195,6 +191,41 @@ public class HospitalService {
         } catch (Exception e) {
             System.out.println("Erro inesperado: " + e.getMessage());
         }
+    }
+
+    public void menuAtendimentos(){
+        AtendimentoDAO dao = new AtendimentoDAO();
+        int opcao;
+        do {
+            System.out.println("1 - Adicionar atendimento;");
+            System.out.println("2 - Listar atendimentos;");
+            System.out.println("3 - Atualizar atendimento;");
+            System.out.println("4 - Deletar atendimento;");
+            System.out.println("0 - Voltar ao menu.");
+
+            opcao = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcao){
+
+                case 1:
+                    adicionarAtendimentoPaciente();
+                    break;
+                case 2:
+                    selecionarPacientesParaListarAtendimentos();
+                    break;
+                case 3:
+                    atualizarAtendimento();
+                    break;
+                case 4:
+                    dao.selecionarAtendimento();
+                    deletarAtendimento();
+                    break;
+                default:
+                    System.out.println("Opção de índice inválida");
+                    break;
+            }
+        }while (opcao != 0);
     }
 
     public void listarPacientes() {
@@ -223,7 +254,10 @@ public class HospitalService {
 
 
         AtendimentoDAO dao = new AtendimentoDAO();
-        dao.inserirAtendimento(atendimento);
+        int id = dao.inserirAtendimento(atendimento);
+        atendimento.setId(id);
+
+        System.out.println("Atendimento salvo com sucesso!");
     }
 
     public void selecionarPacientesParaListarAtendimentos() {
@@ -308,6 +342,16 @@ public class HospitalService {
         dao.deletePaciente(cpf);
     }
 
+    public void deletarAtendimento(){
+        AtendimentoDAO dao = new AtendimentoDAO();
+
+        System.out.println("Insira o ID do atendimento que deseja excluir: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        dao.deletarAtendimento(id);
+    }
+
     public void atualizarPaciente() {
         PacienteDAO dao = new PacienteDAO();
 
@@ -317,5 +361,18 @@ public class HospitalService {
         String novoNome = sc.nextLine();
 
         dao.atualizarPaciente(cpf, novoNome);
+    }
+
+    public void atualizarAtendimento(){
+        AtendimentoDAO dao = new AtendimentoDAO();
+
+        System.out.println("Digite o ID do atendimento: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        System.out.println("Insira a nova descrição do atendimento: ");
+        String novaDescricao = sc.nextLine();
+
+        dao.atualizarAtendimento(id, novaDescricao);
     }
 }

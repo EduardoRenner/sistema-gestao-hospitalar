@@ -17,7 +17,7 @@ public abstract class Paciente {
 
     public abstract double calcularValorFinal();
 
-    public abstract double calcularValorUnico();
+    public abstract double calcularValorUnico(int id);
 
     public abstract void imprimirPaciente();
 
